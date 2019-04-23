@@ -1,0 +1,30 @@
+{
+  "name": "alltomp3-bot-main",
+  "version": "1.0.0",
+  "description": "Telegram Bot for AllToMP3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AllToMP3/alltomp3-bot-main.git"
+  },
+  "author": "Basile Bruneau <basilebruneau@gmail.com>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/AllToMP3/alltomp3-bot-main/issues"
+  },
+  "homepage": "https://github.com/AllToMP3/alltomp3-bot-main#readme",
+  "dependencies": {
+    "alltomp3": "git+https://github.com/AllToMP3/alltomp3.git#master",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "http": "0.0.0",
+    "randomstring": "^1.1.5",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "sqlite3": "^3.1.8",
+    "websocket": "^1.0.24"
+  }
+}
