@@ -25,35 +25,37 @@ let app = express();
 
 app.use(bodyParser.json());
 app.post('/webhook', function(req, res) {
-  console.log(req.body, demands, queries);
+  console.log('Message received', req.body.message);
   let m = req.body.message;
   let cbq = req.body.callback_query;
   if (m) {
     let registerr = new RegExp('^/register((' + BOT + ')?) ([a-zA-Z0-9]+)-([a-zA-Z0-9]+)$');
     let dlr = new RegExp('^/dl((' + BOT + ')?) (.+)$');
     if (m.chat.type === 'private') {
-      let mregister = m.text.match(registerr);
-      if (mregister) {
-        db.get("SELECT id FROM clients WHERE key = ? AND confirm = ?", [mregister[3], mregister[4]], function(err, row) {
-          if (!err && row && row.id > 0) {
-            db.run("INSERT INTO admins(user_id, client) VALUES (?, ?)", [m.from.id, row.id], function() {
+      if (m.text) {
+        let mregister = m.text.match(registerr);
+        if (mregister) {
+          db.get("SELECT id FROM clients WHERE key = ? AND confirm = ?", [mregister[3], mregister[4]], function(err, row) {
+            if (!err && row && row.id > 0) {
+              db.run("INSERT INTO admins(user_id, client) VALUES (?, ?)", [m.from.id, row.id], function() {
+                telegramq('sendMessage', {
+                  chat_id: m.chat.id,
+                  text: 'You now manage the client ' + mregister[3]
+                });
+              });
+              db.run("INSERT INTO chats(chat_id, client) VALUES (?, ?)", [m.chat.id, row.id], err => {});
+            } else {
               telegramq('sendMessage', {
                 chat_id: m.chat.id,
-                text: 'You now manage the client ' + mregister[3]
+                text: 'Either the key of the confirm key is wrong'
               });
-            });
-            db.run("INSERT INTO chats(chat_id, client) VALUES (?, ?)", [m.chat.id, row.id], err => {});
-          } else {
-            telegramq('sendMessage', {
-              chat_id: m.chat.id,
-              text: 'Either the key of the confirm key is wrong'
-            });
-          }
-        });
-      } else if (m.text === '/removeall') {
-        db.run("DELETE FROM admins WHERE user_id = ?", [m.from.id], err => {});
+            }
+          });
+        } else if (m.text === '/removeall') {
+          db.run("DELETE FROM admins WHERE user_id = ?", [m.from.id], err => {});
+        }
       }
-    } else if (m.chat.type === 'group') {
+    } else if (m.chat.type === 'group' || m.chat.type === 'supergroup') {
       if (m.new_chat_members && m.new_chat_members.length > 0) {
         m.new_chat_members.forEach(cm => {
           if (cm.id === ID) { // The bot has been added to a chat
@@ -97,7 +99,9 @@ app.post('/webhook', function(req, res) {
               let q = m.text.match(dlr)[3];
               let type = alltomp3.typeOfQuery(q);
               if (type === 'text') {
+                console.log('alltomp3.suggestedSongs', q);
                 alltomp3.suggestedSongs(q, 5).then(suggestions => {
+                  console.log('suggestions found');
                   let buttons = [];
                   suggestions.forEach(s => {
                     buttons.push([{
