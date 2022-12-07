@@ -19,7 +19,7 @@
   "dependencies": {
     "alltomp3": "git+https://github.com/AllToMP3/alltomp3.git#master",
     "body-parser": "^1.17.2",
-    "express": "^4.15.3",
+    "express": "^4.17.3",
     "http": "0.0.0",
     "randomstring": "^1.1.5",
     "request": "^2.81.0",
