@@ -18,13 +18,13 @@
   "homepage": "https://github.com/AllToMP3/alltomp3-bot-main#readme",
   "dependencies": {
     "alltomp3": "git+https://github.com/AllToMP3/alltomp3.git#master",
-    "body-parser": "^1.17.2",
-    "express": "^4.15.3",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
     "http": "0.0.0",
     "randomstring": "^1.1.5",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "sqlite3": "^3.1.8",
+    "sqlite3": "^3.1.13",
     "websocket": "^1.0.24"
   }
 }
